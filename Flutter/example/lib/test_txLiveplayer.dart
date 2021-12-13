@@ -1,3 +1,4 @@
+// @dart = 2.7
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:super_player/super_player.dart';
@@ -14,7 +15,9 @@ class _TestTXPLivelayerState extends State<TestTXLivePlayer> {
   TXLivePlayerController _controller;
   double _aspectRatio = 0;
   double _progress = 0.0;
-  String _url = "http://liteavapp.qcloud.com/live/liteavdemoplayerstreamid_demo1080p.flv";
+  // String _url = "http://liteavapp.qcloud.com/live/liteavdemoplayerstreamid_demo1080p.flv";
+  String _url = "rtmp://192.168.10.128:1935/live/6L01202RAJ4F1F8";
+  // String _url = "rtmp://xxxx";
   bool _isStop = true;
 
   Future<void> init() async {
@@ -31,6 +34,7 @@ class _TestTXPLivelayerState extends State<TestTXLivePlayer> {
         EasyLoading.dismiss();
       }else if (event["event"] == 2015) {//切换流成功
         EasyLoading.dismiss();
+        // if (_url == "http://liteavapp.qcloud.com/live/liteavdemoplayerstreamid_demo1080p.flv") {
         if (_url == "http://liteavapp.qcloud.com/live/liteavdemoplayerstreamid_demo1080p.flv") {
           EasyLoading.showSuccess('切换到1080p!');
         }else {
@@ -62,7 +66,8 @@ class _TestTXPLivelayerState extends State<TestTXLivePlayer> {
 //    await _controller.setLiveMode(LiveMode.Speed);
 //    await _controller.play("http://liteavapp.qcloud.com/live/liteavdemoplayerstreamid.flv", playType: TXPlayType.LIVE_FLV);
     //安卓需要设置hls格式才可正常播放
-    await _controller.play(_url, playType: TXPlayType.LIVE_FLV);
+    // await _controller.play(_url, playType: TXPlayType.LIVE_FLV);
+    await _controller.play(_url, playType: TXPlayType.LIVE_RTMP);
 //    await _controller.play("http://liteavapp.qcloud.com/live/liteavdemoplayerstreamid.flv", playType: TXPlayType.VOD_HLS);
   }
 

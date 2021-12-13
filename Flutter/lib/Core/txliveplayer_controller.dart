@@ -1,4 +1,4 @@
-// @dart = 2.7
+// @dart = 2.14
 part of SuperPlayer;
 
 class TXLivePlayerController extends ChangeNotifier implements ValueListenable<TXPlayerValue>, TXPlayerController {
@@ -8,13 +8,13 @@ class TXLivePlayerController extends ChangeNotifier implements ValueListenable<T
   final Completer<int> _createTexture;
   bool _isDisposed = false;
   bool _isNeedDisposed = false;
-  MethodChannel _channel;
-  TXPlayerValue _value;
-  TXPlayerState _state;
+  late MethodChannel _channel;
+  late TXPlayerValue _value;
+  late TXPlayerState _state;
 
   TXPlayerState get playState => _state;
-  StreamSubscription _eventSubscription;
-  StreamSubscription _netSubscription;
+  StreamSubscription? _eventSubscription;
+  StreamSubscription? _netSubscription;
 
   final StreamController<TXPlayerState> _stateStreamController =
   StreamController.broadcast();
@@ -33,7 +33,7 @@ class TXLivePlayerController extends ChangeNotifier implements ValueListenable<T
       : _initPlayer = Completer(),
         _createTexture = Completer() {
     _value = TXPlayerValue.uninitialized();
-    _state = _value.state;
+    _state = _value.state!;
     _create();
   }
 
@@ -112,7 +112,7 @@ class TXLivePlayerController extends ChangeNotifier implements ValueListenable<T
 
   _changeState(TXPlayerState playerState){
     value = _value.copyWith(state: playerState);
-    _state = value.state;
+    _state = value.state!;
     _stateStreamController.add(_state);
   }
 
@@ -120,7 +120,7 @@ class TXLivePlayerController extends ChangeNotifier implements ValueListenable<T
   /// 当设置[LivePlayer] 类型播放器时，需要参数[playType]
   /// 参考: [PlayType.LIVE_RTMP] ...
   ///
-  Future<bool> play(String url, {int playType}) async {
+  Future<bool> play(String url, {int? playType}) async {
     await _initPlayer.future;
     await _createTexture.future;
     _changeState(TXPlayerState.buffering);
@@ -130,8 +130,8 @@ class TXLivePlayerController extends ChangeNotifier implements ValueListenable<T
     return result == 0;
   }
 
-  Future<void> initialize({bool onlyAudio}) async{
-    if(_isNeedDisposed) return false;
+  Future<void> initialize({bool? onlyAudio}) async{
+    if(_isNeedDisposed) return ;
     await _initPlayer.future;
     final textureId = await _channel.invokeMethod("init", {
       "onlyAudio": onlyAudio ?? false,
@@ -140,10 +140,10 @@ class TXLivePlayerController extends ChangeNotifier implements ValueListenable<T
     _state = TXPlayerState.paused;
   }
 
-  Future<void> setIsAutoPlay({bool isAutoPlay}) async{
-    if(_isNeedDisposed) return false;
+  Future<void> setIsAutoPlay({bool? isAutoPlay}) async{
+    if(_isNeedDisposed) return ;
     await _initPlayer.future;
-    await _channel.invokeMethod("setIsAutoPlay", {"isAutoPlay" ?? false});
+    await _channel.invokeMethod("setIsAutoPlay", {isAutoPlay ?? false});
   }
 
   Future<bool> stop({bool isNeedClear = true}) async {
@@ -232,7 +232,7 @@ class TXLivePlayerController extends ChangeNotifier implements ValueListenable<T
   void dispose() async{
     _isNeedDisposed = true;
     if(!_isDisposed){
-      await _eventSubscription.cancel();
+      await _eventSubscription!.cancel();
       _eventSubscription = null;
 
       await _release();

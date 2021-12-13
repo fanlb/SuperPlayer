@@ -1,9 +1,9 @@
-// @dart = 2.7
+// @dart = 2.14
 part of SuperPlayer;
 
 class SuperPlayerPlatformViewController {
-  MethodChannel _channel;
-  StreamSubscription _eventSubscription;
+  MethodChannel? _channel;
+  StreamSubscription? _eventSubscription;
   final StreamController<Map<dynamic, dynamic>> _eventStreamController =
   StreamController.broadcast();
   Stream<Map<dynamic, dynamic>> get onPlayerEventBroadcast => _eventStreamController.stream;
@@ -27,39 +27,39 @@ class SuperPlayerPlatformViewController {
 
 
   Future<void> reloadView({String url = "", int appId = 0, String fileId = "", String psign = ""}) async {
-    return _channel.invokeMethod('reloadView', {"url": url, "appId":appId, "fileId": fileId, "psign":psign});
+    return _channel!.invokeMethod('reloadView', {"url": url, "appId":appId, "fileId": fileId, "psign":psign});
   }
 
   Future<void> playWithModel(SuperPlayerViewModel model) async {
-    return _channel.invokeMethod('play', {"playerModel": model.toJson()});
+    return _channel!.invokeMethod('play', {"playerModel": model.toJson()});
   }
 
   Future<void> setPlayConfig(SuperPlayerViewConfig config) async {
-    return _channel.invokeMethod('playConfig', {"config": config.toJson()});
+    return _channel!.invokeMethod('playConfig', {"config": config.toJson()});
   }
 
-  Future<void> setIsAutoPlay({bool isAutoPlay}) async{
-    await _channel.invokeMethod("setIsAutoPlay", {"isAutoPlay": isAutoPlay ?? false});
+  Future<void> setIsAutoPlay({bool? isAutoPlay}) async{
+    await _channel!.invokeMethod("setIsAutoPlay", {"isAutoPlay": isAutoPlay ?? false});
   }
 
   Future<void> setStartTime(double startTime) async {
-    await _channel.invokeMethod("setStartTime", {"startTime": startTime});
+    await _channel!.invokeMethod("setStartTime", {"startTime": startTime});
   }
 
   // Future<void> setIsLockScreen(bool isLock) async {
-  //   await _channel.invokeMethod("setIsLockScreen", {"isLock": isLock});
+  //   await _channel!.invokeMethod("setIsLockScreen", {"isLock": isLock});
   // }
 
   Future<void> disableGesture(bool enable) async {
-    await _channel.invokeMethod("disableGesture", {"enable": enable});
+    await _channel!.invokeMethod("disableGesture", {"enable": enable});
   }
 
   Future<void> setLoop(bool loop) async {
-    await _channel.invokeMethod("setLoop", {"loop": loop});
+    await _channel!.invokeMethod("setLoop", {"loop": loop});
   }
 
   Future<void> resetPlayer() async {
-    await _channel.invokeMethod("resetPlayer");
+    await _channel!.invokeMethod("resetPlayer");
   }
 
 }

@@ -1,4 +1,4 @@
-// @dart = 2.7
+// @dart = 2.14
 part of SuperPlayer;
 
 class SuperPlayerPlugin {

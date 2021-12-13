@@ -1,13 +1,13 @@
-// @dart = 2.7
+// @dart = 2.14
 part of SuperPlayer;
 
 class TXPlayerValue{
-  final TXPlayerState state;
+  final TXPlayerState? state;
   TXPlayerValue.uninitialized():this(state:TXPlayerState.stopped);
 
   TXPlayerValue({@required this.state});
 
-  TXPlayerValue copyWith({TXPlayerState state}){
+  TXPlayerValue copyWith({TXPlayerState? state}){
     return TXPlayerValue(
         state:state ?? this.state
     );

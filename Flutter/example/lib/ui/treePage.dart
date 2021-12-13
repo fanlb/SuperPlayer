@@ -1,3 +1,4 @@
+// @dart = 2.7
 import 'dart:convert';
 import 'dart:math';
 
@@ -157,11 +158,11 @@ class _TreePageState extends State<TreePage> {
             // ignore: missing_return
             builder: (context) {
               if (i == 1) {
-                return TestTXLivePlayer();
+                return TestTXLivePlayer();  // 直播
               }else if (i == 2) {
-                return TestTXVodPlayer();
+                return TestTXVodPlayer(); //点播
               }else {
-                return TestSuperPlayer();
+                return TestSuperPlayer(); //超级播放
               }
             }
           ),

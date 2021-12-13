@@ -1,8 +1,8 @@
-// @dart = 2.7
+// @dart = 2.14
 part of SuperPlayer;
 
 class TXPlayerVideo extends StatefulWidget {
-  final TXPlayerController controller;
+  TXPlayerController? controller;
 
   TXPlayerVideo({@required this.controller}):assert(controller != null);
 
@@ -17,7 +17,7 @@ class _TXPlayerVideoState extends State<TXPlayerVideo> {
   void initState() {
     super.initState();
 
-    widget.controller.textureId.then((val) {
+    widget.controller!.textureId.then((val) {
       setState(() {
         print("_textureId = $val");
         _textureId = val;

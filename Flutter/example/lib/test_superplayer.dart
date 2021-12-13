@@ -1,18 +1,20 @@
+// @dart = 2.7
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
+import 'dart:ui';
 
+import 'package:auto_orientation/auto_orientation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'dart:async';
-import 'package:super_player/super_player.dart';
-import 'ui/test_inputdialog.dart';
-import 'package:auto_orientation/auto_orientation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'dart:io';
-import 'dart:ui';
+import 'package:super_player/super_player.dart';
+
+import 'ui/test_inputdialog.dart';
 
 class TestSuperPlayer extends StatefulWidget {
   @override
@@ -20,19 +22,17 @@ class TestSuperPlayer extends StatefulWidget {
 }
 
 class _TestSuperPlayerState extends State<TestSuperPlayer> {
-  bool _liveSelected = true;//live is default
+  bool _liveSelected = true; //live is default
   var _currentModels = <SuperPlayerViewModel>[];
   SuperPlayerViewConfig _playerConfig = SuperPlayerViewConfig();
   SuperPlayerPlatformViewController _playerController;
   bool _isFullSceen = false;
-  double _aspectRatio = defaultTargetPlatform == TargetPlatform.android?(1.0 * (window.physicalSize.height) / (window.physicalSize.width - window.padding.top)):16.0/9.0;
-  TextStyle _textStyleSelected = new TextStyle(
-      fontSize: 16, color: Colors.white
-  );
-  TextStyle _textStyleUnSelected = new TextStyle(
-      fontSize: 16, color: Colors.grey
-  );
-  final Completer<bool> _initPlayer = Completer();//防止player未初始化的时候就调用playmodel
+  double _aspectRatio = defaultTargetPlatform == TargetPlatform.android
+      ? (1.0 * (window.physicalSize.height) / (window.physicalSize.width - window.padding.top))
+      : 16.0 / 9.0;
+  TextStyle _textStyleSelected = new TextStyle(fontSize: 16, color: Colors.white);
+  TextStyle _textStyleUnSelected = new TextStyle(fontSize: 16, color: Colors.grey);
+  final Completer<bool> _initPlayer = Completer(); //防止player未初始化的时候就调用playmodel
 
   //高清url = "http://liteavapp.qcloud.com/live/liteavdemoplayerstreamid.flv";
   //超清url = "http://liteavapp.qcloud.com/live/liteavdemoplayerstreamid_demo1080p.flv";
@@ -54,16 +54,15 @@ class _TestSuperPlayerState extends State<TestSuperPlayer> {
     showDialog(
         context: context,
         builder: (context) {
-          return TestInputDialog("", 0, "",
-              (String url, int appId, String fileId) {
+          return TestInputDialog("", 0, "", (String url, int appId, String fileId) {
             SuperPlayerViewModel model = new SuperPlayerViewModel();
             model.appId = appId;
             if (url.isNotEmpty) {
               model.videoURL = url;
-            }else if (appId != 0 && fileId.isNotEmpty) {
+            } else if (appId != 0 && fileId.isNotEmpty) {
               model.videoId = new SuperPlayerVideoId();
               model.videoId.fileId = fileId;
-            }else {
+            } else {
               EasyLoading.showError("请输入播放地址!");
               return;
             }
@@ -78,8 +77,8 @@ class _TestSuperPlayerState extends State<TestSuperPlayer> {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-        image: AssetImage("images/ic_new_vod_bg.png"),
-        fit: BoxFit.cover,
+            image: AssetImage("images/ic_new_vod_bg.png"),
+            fit: BoxFit.cover,
       )),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -89,8 +88,8 @@ class _TestSuperPlayerState extends State<TestSuperPlayer> {
                 backgroundColor: Colors.transparent,
                 title: const Text('SuperPlayer'),
               ),
-        body:SafeArea(
-          child:Builder(
+        body: SafeArea(
+          child: Builder(
             builder: (context) => createBody(),
           ),
         ),
@@ -131,25 +130,23 @@ class _TestSuperPlayerState extends State<TestSuperPlayer> {
                     SystemChrome.setEnabledSystemUIOverlays([]);
                   }
                   print("onStartFullScreenPlay");
-                } else if (evtName == SuperPlayerViewEvent.onStopFullScreenPlay){
-                    if (defaultTargetPlatform == TargetPlatform.android) {
-                      _isFullSceen = false;
+                } else if (evtName == SuperPlayerViewEvent.onStopFullScreenPlay) {
+                  if (defaultTargetPlatform == TargetPlatform.android) {
+                    _isFullSceen = false;
 
-                      /// 如果是全屏就切换竖屏
-                      AutoOrientation.portraitAutoMode();
+                    /// 如果是全屏就切换竖屏
+                    AutoOrientation.portraitAutoMode();
 
-                      ///显示状态栏，与底部虚拟操作按钮
-                      SystemChrome.setEnabledSystemUIOverlays(
-                          [SystemUiOverlay.top, SystemUiOverlay.bottom]);
-                    }
-                    print("onStopFullScreenPlay");
-                  } else if (evtName == SuperPlayerViewEvent.onSuperPlayerBackAction) {
-                    print("onSuperPlayerBackAction");
-                  } else {
-                    print(evtName);
+                    ///显示状态栏，与底部虚拟操作按钮
+                    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top, SystemUiOverlay.bottom]);
                   }
+                  print("onStopFullScreenPlay");
+                } else if (evtName == SuperPlayerViewEvent.onSuperPlayerBackAction) {
+                  print("onSuperPlayerBackAction");
+                } else {
+                  print(evtName);
                 }
-              );
+              });
             });
             _initPlayer.complete(true);
           },
@@ -167,9 +164,7 @@ class _TestSuperPlayerState extends State<TestSuperPlayer> {
     return new Container(
       // color: Colors.red,
       height: 50,
-      child: IconButton(
-          icon: new Image.asset('images/addp.png'),
-          onPressed: () => {onPressed(context)}),
+      child: IconButton(icon: new Image.asset('images/addp.png'), onPressed: () => {onPressed(context)}),
     );
   }
 
@@ -183,7 +178,7 @@ class _TestSuperPlayerState extends State<TestSuperPlayer> {
             child: new Container(
               child: Text(
                 "直播",
-                style: _liveSelected?_textStyleSelected:_textStyleUnSelected,
+                style: _liveSelected ? _textStyleSelected : _textStyleUnSelected,
               ),
             ),
             onTap: _getLiveListData,
@@ -193,7 +188,7 @@ class _TestSuperPlayerState extends State<TestSuperPlayer> {
               child: new Container(
                 child: Text(
                   "点播",
-                  style: _liveSelected?_textStyleUnSelected:_textStyleSelected,
+                  style: _liveSelected ? _textStyleUnSelected : _textStyleSelected,
                 ),
               )),
         ],
@@ -249,7 +244,7 @@ class _TestSuperPlayerState extends State<TestSuperPlayer> {
 
       models.add(model);
 
-      if(i == 0){
+      if (i == 0) {
         playCurrentModel(model);
       }
     }
@@ -265,14 +260,12 @@ class _TestSuperPlayerState extends State<TestSuperPlayer> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ListTile(
-          leading: Image.network(playModel.coverUrl),
-          title: new Text(
-            playModel.title,
-            style: TextStyle(color: Colors.white),
-          ),
-          onTap: () => playCurrentModel(playModel)
-
-        ),
+            leading: Image.network(playModel.coverUrl),
+            title: new Text(
+              playModel.title,
+              style: TextStyle(color: Colors.white),
+            ),
+            onTap: () => playCurrentModel(playModel)),
         Divider()
       ],
     );
@@ -368,7 +361,7 @@ class _TestSuperPlayerState extends State<TestSuperPlayer> {
 
   playCurrentModel(SuperPlayerViewModel playModel) async {
     print("playCurrentModel,playModel = playModel=$playModel");
-    await _initPlayer.future;//一定要有_playerController
+    await _initPlayer.future; //一定要有_playerController
     _playerController.playWithModel(playModel);
   }
 }

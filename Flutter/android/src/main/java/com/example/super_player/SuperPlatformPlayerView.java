@@ -103,7 +103,7 @@ public class SuperPlatformPlayerView implements PlatformView, MethodChannel.Meth
 
     @Override
     public void onClickFloatCloseBtn() {
-        mEventSink.success(getParams("onClickFloatCloseBtn",null));
+        mEventSink.success(getParams("onClickFloatCloseBtn", null));
     }
 
     @Override
@@ -113,22 +113,22 @@ public class SuperPlatformPlayerView implements PlatformView, MethodChannel.Meth
 
     @Override
     public void onStartFloatWindowPlay() {
-        mEventSink.success(getParams("onStartFloatWindowPlay",null));
+        mEventSink.success(getParams("onStartFloatWindowPlay", null));
     }
 
     @Override
     public void onSuperPlayerDidStart() {
-        mEventSink.success(getParams("onSuperPlayerDidStart",null));
+        mEventSink.success(getParams("onSuperPlayerDidStart", null));
     }
 
     @Override
     public void onSuperPlayerDidEnd() {
-        mEventSink.success(getParams("onSuperPlayerDidEnd",null));
+        mEventSink.success(getParams("onSuperPlayerDidEnd", null));
     }
 
     @Override
     public void onSuperPlayerError() {
-        mEventSink.success(getParams("onSuperPlayerError",null));
+        mEventSink.success(getParams("onSuperPlayerError", null));
     }
 
     @Override
@@ -138,7 +138,10 @@ public class SuperPlatformPlayerView implements PlatformView, MethodChannel.Meth
 
     @Override
     public void dispose() {
-        mSuperPlayerView.resetPlayer();
+        if (mSuperPlayerView != null) {
+            android.util.Log.e("XCTest", "dispose: mSuperPlayerView==null");
+            mSuperPlayerView.resetPlayer();
+        }
     }
 
     @Override
@@ -158,26 +161,26 @@ public class SuperPlatformPlayerView implements PlatformView, MethodChannel.Meth
             Map playConfig = call.argument("config");
             setPlayConfig(playConfig);
             result.success(null);
-        } else if(call.method.equals("disableGesture")) {
+        } else if (call.method.equals("disableGesture")) {
             Boolean enable = call.argument("enable");
             disableGesture(enable);
             result.success(null);
-        } else if(call.method.equals("setIsAutoPlay")) {
+        } else if (call.method.equals("setIsAutoPlay")) {
             Boolean enable = call.argument("isAutoPlay");
             setIsAutoPlay(enable);
             result.success(null);
-        } else if(call.method.equals("setStartTime")) {
+        } else if (call.method.equals("setStartTime")) {
             Double startTime = call.argument("startTime");
             setStartTime(startTime);
             result.success(null);
-        } else if(call.method.equals("setLoop")) {
+        } else if (call.method.equals("setLoop")) {
             Boolean enable = call.argument("loop");
             setLoop(enable);
             result.success(null);
-        } else if(call.method.equals("resetPlayer")){
+        } else if (call.method.equals("resetPlayer")) {
             destory();
             result.success(null);
-        }else {
+        } else {
             result.notImplemented();
         }
     }
@@ -226,7 +229,7 @@ public class SuperPlatformPlayerView implements PlatformView, MethodChannel.Meth
         if (playerModel.containsKey("multiVideoURLs")) {
             List<SuperPlayerModel.SuperPlayerURL> multiURLs = new ArrayList<SuperPlayerModel.SuperPlayerURL>();
             List<Map> mapURLs = (List<Map>) playerModel.get("multiVideoURLs");
-            for (Map e:mapURLs) {
+            for (Map e : mapURLs) {
                 SuperPlayerModel.SuperPlayerURL url = new SuperPlayerModel.SuperPlayerURL();
                 url.qualityName = (String) e.get("title");
                 url.url = (String) e.get("url");
@@ -256,6 +259,7 @@ public class SuperPlatformPlayerView implements PlatformView, MethodChannel.Meth
 
     /**
      * 关闭所有手势
+     *
      * @param flag true为关闭手势，false为开启手势
      */
     public void disableGesture(boolean flag) {
